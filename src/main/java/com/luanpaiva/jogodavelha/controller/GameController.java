@@ -1,7 +1,7 @@
 package com.luanpaiva.jogodavelha.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.Arrays;
+import java.util.List;
 
 import com.luanpaiva.jogodavelha.model.Player;
 import com.luanpaiva.jogodavelha.util.Alerts;
@@ -29,64 +29,50 @@ public class GameController {
 
 	@FXML
 	private Label posicao0;
-
 	@FXML
 	private Label posicao1;
-
 	@FXML
 	private Label posicao2;
-
 	@FXML
 	private Label posicao3;
-
 	@FXML
 	private Label posicao4;
-
 	@FXML
 	private Label posicao5;
-
 	@FXML
 	private Label posicao6;
-
 	@FXML
 	private Label posicao7;
-
 	@FXML
 	private Label posicao8;
-
 	@FXML
 	private Label ptsJ1;
-
 	@FXML
 	private Label ptsJ2;
-
 	@FXML
 	private Button btnNovoJogo;
-
 	@FXML
 	private Button btnZerarPontos;
-
 	@FXML
 	private ToggleButton btnTrocarSimbolo;
-
 	@FXML
 	private ToggleButton btnJogarContraIA;
 
-	@FXML
-	private ResourceBundle resources;
-
-	@FXML
-	private URL location;
+	private List<Label> listLabels;
 
 	@FXML
 	void initialize() {
+
+		listLabels = Arrays.asList(posicao0, posicao1, posicao2, posicao3, posicao4, posicao5, posicao6, posicao7,
+				posicao8);
+
 		ptsJ1.setText(Integer.toString(vitoriaPLAYER_1));
 		ptsJ2.setText(Integer.toString(vitoriaPLAYER_2));
 		jogadorAtual = PLAYER_1;
 		newGame();
 	}
-	
-	private void jogada(Label posicaoJogada) {
+
+	private void jogar(Label posicaoJogada) {
 
 		switch (posicaoJogada.getId()) {
 		case "posicao0":
@@ -118,7 +104,7 @@ public class GameController {
 			break;
 		}
 
-		if (this.useImage) {
+		if (useImage) {
 			if (jogadorAtual == PLAYER_1) {
 				if (jogadorAtual.getSimbolo().equals("X")) {
 					posicaoJogada.setGraphic(new ImageView("images/img1_100x100.png"));
@@ -342,67 +328,37 @@ public class GameController {
 		}
 		return false;
 	}
-	
+
 	private void newGame() {
 
-		posicao0.setText("");
-		posicao1.setText("");
-		posicao2.setText("");
-		posicao3.setText("");
-		posicao4.setText("");
-		posicao5.setText("");
-		posicao6.setText("");
-		posicao7.setText("");
-		posicao8.setText("");
-
-		posicao0.setGraphic(null);
-		posicao1.setGraphic(null);
-		posicao2.setGraphic(null);
-		posicao3.setGraphic(null);
-		posicao4.setGraphic(null);
-		posicao5.setGraphic(null);
-		posicao6.setGraphic(null);
-		posicao7.setGraphic(null);
-		posicao8.setGraphic(null);
-
-		posicao0.setDisable(false);
-		posicao1.setDisable(false);
-		posicao2.setDisable(false);
-		posicao3.setDisable(false);
-		posicao4.setDisable(false);
-		posicao5.setDisable(false);
-		posicao6.setDisable(false);
-		posicao7.setDisable(false);
-		posicao8.setDisable(false);
+		listLabels.stream().forEach(label -> {
+			label.setText("");
+			label.setGraphic(null);
+			label.setDisable(false);
+		});
 
 		round = 1;
 
 		for (int i = 0; i < p.length; i++) {
 			p[i] = null;
 		}
-		
+
 		if (playComputer) {
 			computer();
 		}
-		
+
 	}
-	
+
 	@FXML
 	void newGame(MouseEvent event) {
 		newGame();
 	}
-	
+
 	private void endGame() {
 
-		posicao0.setDisable(true);
-		posicao1.setDisable(true);
-		posicao2.setDisable(true);
-		posicao3.setDisable(true);
-		posicao4.setDisable(true);
-		posicao5.setDisable(true);
-		posicao6.setDisable(true);
-		posicao7.setDisable(true);
-		posicao8.setDisable(true);
+		listLabels.stream().forEach(label -> {
+			label.setDisable(true);
+		});
 
 		jogadorAtual = (jogadorAtual == PLAYER_1) ? PLAYER_2 : PLAYER_1;
 	}
@@ -417,15 +373,14 @@ public class GameController {
 
 	@FXML
 	void btnJogarContraIA(MouseEvent event) {
-		btnJogarContraIA.setText(
-				(btnJogarContraIA.getText().equals("JOG VS MAQ") ? "JOG VS JOG" : "JOG VS MAQ"));
+		btnJogarContraIA.setText((btnJogarContraIA.getText().equals("JOG VS MAQ") ? "JOG VS JOG" : "JOG VS MAQ"));
 		playComputer = (playComputer == true) ? (playComputer = false) : (playComputer = true);
 	}
-	
-	public void jogarNaPosicao(Label posicao) {
-		if (posicao.getGraphic() == null && posicao.getText().equals("")) {
-			posicao.setTextFill(jogadorAtual.getColor());
-			jogada(posicao);
+
+	public void jogarNaPosicao(Label posicaoJogada) {
+		if (posicaoJogada.getGraphic() == null && posicaoJogada.getText().equals("")) {
+			posicaoJogada.setTextFill(jogadorAtual.getColor());
+			jogar(posicaoJogada);
 		}
 	}
 
