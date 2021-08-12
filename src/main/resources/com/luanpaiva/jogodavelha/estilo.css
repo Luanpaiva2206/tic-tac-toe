@@ -1,0 +1,9 @@
+.background{
+	-fx-background-color: #FFF;
+}
+
+.posicao {
+	-fx-padding: -30px;
+	-fx-font-size: 115px;
+	-fx-font-weight: Bold;
+}
